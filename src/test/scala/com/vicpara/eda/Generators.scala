@@ -6,8 +6,9 @@ import org.scalacheck.Gen
 import scalaz.Scalaz._
 
 trait Generators {
-  val nTransactions = 100000
-  val nCustomers = 100
+  val nTransactions = 1000000
+  val nCustomers = 800
+  val nBusinesses = 300
 
   val nonNegativeLongGen: Gen[Long] = Gen.choose[Long](0l, Long.MaxValue - 1)
   val nonNegativeIntGen: Gen[Int] = Gen.choose(0, 100)
@@ -15,14 +16,13 @@ trait Generators {
 
   val nonEmptyAlphaStr = Gen.nonEmptyListOf(Gen.alphaChar).map(_.mkString).suchThat(_.forall(_.isLetter))
 
-  val noOfDays = 60
+  val noOfDays = 15
   val dates = DateTime.now() |> (t0 => (0 until noOfDays).map(t0.minusDays))
 
-  val genListPostcodes = Gen.listOfN(Gen.choose[Int](800, 900).sample.get,
-    Gen.listOfN(6, Gen.alphaNumChar).flatMap(_.toString.toUpperCase()))
+  val genListPostcodes = Gen.listOfN(100, Gen.listOfN(6, Gen.alphaNumChar).flatMap(_.mkString("").toUpperCase()))
 
-  val businessesId: Gen[List[Int]] = Gen.listOfN(1000, Gen.chooseNum(0, 2000))
-  val customersId: Gen[List[Int]] = Gen.listOfN(1000, Gen.chooseNum(10000, 20000))
+  val businessesId: Gen[List[Int]] = Gen.listOfN(nBusinesses, Gen.chooseNum(0, 2000))
+  val customersId: Gen[List[Int]] = Gen.listOfN(nCustomers, Gen.chooseNum(10000, 20000))
 
   def sameDayTimestampGen(date: DateTime): Gen[DateTime] = for {
     hourOfDay <- Gen.choose(0, 23)

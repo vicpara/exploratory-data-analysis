@@ -5,7 +5,7 @@ import org.apache.spark.rdd.RDD
 import org.joda.time.DateTime
 
 case object Stats {
-  def txCountPerCustomerNDayStats(transactions: RDD[Transaction]) =
+  def txCountPerCustomerNDayStats(transactions: RDD[Transaction], nPercentiles: Int = 1001) =
     Some("Customer x Day - Count(Tx)")
     .map(n => PrettyPercentileStats(
       name = n,
@@ -15,11 +15,11 @@ case object Stats {
         toVal = _ => 1l,
         toStats = identity,
         reduceFunc = _ + _,
-        numPercentiles = 1001
+        numPercentiles = nPercentiles
       )
     ))
 
-  def txCountPerBusinessIdNDayStats(transactions: RDD[Transaction]) =
+  def txCountPerBusinessIdNDayStats(transactions: RDD[Transaction], nPercentiles: Int = 1001) =
     Some("BusinessId x Day - Count(Tx)")
     .map(n => PrettyPercentileStats(
       name = n,
@@ -29,10 +29,10 @@ case object Stats {
         toVal = r => 1l,
         toStats = identity,
         reduceFunc = _ + _,
-        numPercentiles = 1001)
+        numPercentiles = nPercentiles)
     ))
 
-  def globalUniqueCustomersCounterStats(transactions: RDD[Transaction]) =
+  def globalUniqueCustomersCounterStats(transactions: RDD[Transaction], nPercentiles: Int = 1001) =
     Some("Global distinct Customers")
     .map(n => PrettyPercentileStats(
       name = n,
@@ -40,11 +40,11 @@ case object Stats {
         toDrillDownKeyOption = None,
         toDimKey = t => 1l,
         toVal = tx => tx.customerId,
-        numPercentiles = 1001
+        numPercentiles = nPercentiles
       )
     ))
 
-  def uniqueCustomerIdPerPostcodeNDayStats(richTx: RDD[Transaction]) =
+  def uniqueCustomerIdPerPostcodeNDayStats(richTx: RDD[Transaction], nPercentiles: Int = 1001) =
     Some("Postcode x Day - Distinct(CustomerID)")
     .map(n => PrettyPercentileStats(
       name = n,
@@ -53,11 +53,11 @@ case object Stats {
         toDrillDownKeyOption = None,
         toDimKey = t => (t.bPostcode.getOrElse(""), dayAsString(t.timestamp)),
         toVal = tx => tx.customerId,
-        numPercentiles = 1001
+        numPercentiles = nPercentiles
       )
     ))
 
-  def uniqueBusinessIdPerPostcodeNDayStats(tx: RDD[Transaction]) =
+  def uniqueBusinessIdPerPostcodeNDayStats(tx: RDD[Transaction], nPercentiles: Int = 1001) =
     Some("Postcode x Day - Distinct(BusinessId)")
     .map(n => PrettyPercentileStats(
       name = n,
@@ -66,22 +66,23 @@ case object Stats {
         toDrillDownKeyOption = None,
         toDimKey = t => (t.bPostcode.getOrElse(""), dayAsString(t.timestamp)),
         toVal = tx => tx.businessId,
-        numPercentiles = 1001
+        numPercentiles = nPercentiles
       )
     ))
 
-  def uniqueCustomersPerBusinessIdNDayStats(tx: RDD[Transaction]) =
+  def uniqueCustomersPerBusinessIdNDayStats(tx: RDD[Transaction], nPercentiles: Int = 1001) =
     Some("BusinessId x Day - Distinct(CustomerId)")
     .map(n => PrettyPercentileStats(
       name = n,
       levels = SequenceStats.distinct[Transaction, (Long, String), Long](
         data = tx.setName(n),
-        toDrillDownKeyOption = None,
-        toDimKey = rtx => (rtx.businessId, dayAsString(rtx.timestamp)),
-        toVal = rtx => rtx.customerId,
-        numPercentiles = 1001
+        toDrillDownKeyOption = Some(tx => dayOfWeek(tx.timestamp)),
+        toDimKey = tx => (tx.businessId, dayAsString(tx.timestamp)),
+        toVal = tx => tx.customerId,
+        numPercentiles = nPercentiles
       )
     ))
 
   def dayAsString(millis: Long): String = new DateTime(millis).toString("yyyy-MM-dd")
+  def dayOfWeek(millis: Long): String = new DateTime(millis).dayOfWeek().getAsString
 }

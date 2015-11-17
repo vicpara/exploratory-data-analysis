@@ -29,21 +29,27 @@ case object DescriptiveStatsJob extends Generators {
     conf.printHelp()
     AppLogger().info(conf.summary)
 
-    //    val sparkConf = new SparkConf().set("spark.akka.frameSize", "128").set("spark.hadoop.validateOutputSpecs", "false")
-    //    if (conf.tmpFolder.isDefined) sparkConf.set("spark.local.dir", conf.tmpFolder())
-    //    @transient val sc: SparkContext = new SparkContext(sparkConf)
+    val sparkConf = new SparkConf()
+                    .set("spark.akka.frameSize", "128")
+                    .setMaster("local")
+                    .set("spark.hadoop.validateOutputSpecs", "false")
+                    .set("spark.io.compression.codec", "lz4")
+                    .setAppName("Local Exploratory Data Analysis")
 
-    @transient val sc = StaticSparkContext.staticSc
+    if (conf.tmpFolder.isDefined) sparkConf.set("spark.local.dir", conf.tmpFolder())
+    @transient val sc: SparkContext = new SparkContext(sparkConf)
+
+    //    @transient val sc = StaticSparkContext.staticSc
 
     val transactions = sc.parallelize(randomTransactions(80000).sample.get)
 
     val results: RDD[PrettyPercentileStats] = sc.makeRDD(List(
-      Stats.txCountPerCustomerNDayStats(transactions),
-      Stats.txCountPerBusinessIdNDayStats(transactions),
-      Stats.globalUniqueCustomersCounterStats(transactions),
-      Stats.uniqueBusinessIdPerPostcodeNDayStats(transactions),
-      Stats.uniqueCustomersPerBusinessIdNDayStats(transactions),
-      Stats.uniqueCustomerIdPerPostcodeNDayStats(transactions)
+      Stats.txCountPerCustomerNDayStats(transactions, 101),
+      Stats.txCountPerBusinessIdNDayStats(transactions, 101),
+      Stats.globalUniqueCustomersCounterStats(transactions, 101),
+      Stats.uniqueBusinessIdPerPostcodeNDayStats(transactions, 101),
+      Stats.uniqueCustomersPerBusinessIdNDayStats(transactions, 101),
+      Stats.uniqueCustomerIdPerPostcodeNDayStats(transactions, 101)
     ).flatten, numSlices = 1)
 
     results.saveAsObjectFile(conf.outputPath())
