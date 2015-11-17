@@ -8,7 +8,7 @@ case class PercentileStatsWithFilterLevel(drillDownFilterValue: String, stats: P
 
 case class PrettyPercentileStats(name: String, levels: List[PercentileStatsWithFilterLevel]) {
 
-  def toHumanReadable: String = levels.map(l => s"$name \tDrillDownValue : ${l.drillDownFilterValue}\n\t" +
+  def toHumanReadable: String = levels.map(l => s"\n${"_" * 148}\n$name \tDrillDownValue : ${l.drillDownFilterValue}\n\t" +
     s"${l.stats |> prettyContent}").mkString("\n")
 
   def prettyContent(stats: PercentileStats): String = stats.points match {
@@ -30,6 +30,6 @@ case class PrettyPercentileStats(name: String, levels: List[PercentileStatsWithF
             s"$label |$strIndex| $bars| $value"
         }
         .mkString("\n")
-      s"[PercentileStats]: NumElements: ${stats.numBuckets.toString}\n$histPretty"
+      s"[PercentileStats]: NumBinsInHistogram: ${stats.numBuckets.toString}\n$histPretty"
   }
 }

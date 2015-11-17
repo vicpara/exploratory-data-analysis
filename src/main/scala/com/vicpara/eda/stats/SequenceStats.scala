@@ -6,7 +6,7 @@ import scala.reflect.ClassTag
 import scalaz.Scalaz._
 
 case object SequenceStats {
-  val drillDownKeyAll = "DrillDownKey.ALL"
+  val drillDownKeyAll = "$None$"
 
   def percentile[T: ClassTag, DimKey: ClassTag, V: ClassTag](data: RDD[T],
                                                              toDrillDownKeyOption: Option[T => String],

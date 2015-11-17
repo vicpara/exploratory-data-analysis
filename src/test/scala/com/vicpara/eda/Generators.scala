@@ -1,8 +1,9 @@
 package com.vicpara.eda
 
 import org.joda.time.{DateTime, DateTimeZone, Interval, LocalDateTime}
-import org.scalacheck.Gen
+import org.scalacheck.{Prop, Arbitrary, Gen}
 
+import scala.collection.immutable
 import scalaz.Scalaz._
 
 trait Generators {
@@ -16,13 +17,14 @@ trait Generators {
 
   val nonEmptyAlphaStr = Gen.nonEmptyListOf(Gen.alphaChar).map(_.mkString).suchThat(_.forall(_.isLetter))
 
-  val noOfDays = 15
+  val noOfDays = 23
   val dates = DateTime.now() |> (t0 => (0 until noOfDays).map(t0.minusDays))
 
-  val genListPostcodes = Gen.listOfN(100, Gen.listOfN(6, Gen.alphaNumChar).flatMap(_.mkString("").toUpperCase()))
+  val availablePostcodes = Gen.listOfN(100, Gen.listOfN(6, Gen.alphaNumChar).flatMap(_.mkString("").toUpperCase()))
+                           .sample.get
 
-  val businessesId: Gen[List[Int]] = Gen.listOfN(nBusinesses, Gen.chooseNum(0, 2000))
-  val customersId: Gen[List[Int]] = Gen.listOfN(nCustomers, Gen.chooseNum(10000, 20000))
+  val businesses: List[Int] = Gen.listOfN(nBusinesses, Gen.choose(0, 10000)).sample.get
+  val customers: List[Int] = Gen.listOfN(nCustomers, Gen.chooseNum(10001, 20000)).sample.get
 
   def sameDayTimestampGen(date: DateTime): Gen[DateTime] = for {
     hourOfDay <- Gen.choose(0, 23)
@@ -50,24 +52,17 @@ trait Generators {
     timestamp = date.withTime(hourOfDay, minuteOfHour, 0, 0)
   } yield timestamp
 
-  val postcodeGen: Gen[String] = for {
-    allPostcodes <- genListPostcodes
-    pattern <- Gen.oneOf(allPostcodes)
-  } yield pattern
-
-  def listOfPostcodes(n: Int) = Gen.listOfN(n, postcodeGen)
+  val postcodeGen: Gen[String] = Gen.oneOf(availablePostcodes)
 
   def postcodeFromSectorGen(sector: String) =
     Gen.listOfN(2, Gen.alphaNumChar).map(_.mkString).map(sector + _.toUpperCase)
 
   def randomTransactionGen(): Gen[Transaction] = for {
-    businesses <- businessesId
-    customers <- customersId
-    businessId <- Gen.oneOf(businesses)
-    customerId <- Gen.oneOf(customers)
     timestamp <- timestampGen.map(_.getMillis)
     postcode <- postcodeGen
+    businessId <- Gen.oneOf(businesses)
+    customerId <- Gen.oneOf(customers)
   } yield Transaction(timestamp, customerId, businessId, Some(postcode))
 
-  def randomTransactions(n: Int): Gen[List[Transaction]] = Gen.listOfN(n, randomTransactionGen)
+  def randomTransactions(n: Int): Gen[List[Transaction]] = Gen.listOfN(nTransactions, randomTransactionGen())
 }

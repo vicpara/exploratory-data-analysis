@@ -5,7 +5,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 import org.rogach.scallop.ScallopConf
 
-case class Transaction(timestamp: Long, customerId: Long, businessId: Long, bPostcode: Option[String]) {
+case class Transaction(timestamp: Long, customerId: Long, businessId: Long, postcode: Option[String]) {
   def toSv(sep: String = "\t"): String = List(timestamp, customerId, businessId).mkString(sep)
 }
 
@@ -42,14 +42,19 @@ case object DescriptiveStatsJob extends Generators {
     //    @transient val sc = StaticSparkContext.staticSc
 
     val transactions = sc.parallelize(randomTransactions(80000).sample.get)
+    AppLogger.logStage(transactions, "Finished generating the data points")
 
     val results: RDD[PrettyPercentileStats] = sc.makeRDD(List(
       Stats.txCountPerCustomerNDayStats(transactions, 101),
       Stats.txCountPerBusinessIdNDayStats(transactions, 101),
-      Stats.globalUniqueCustomersCounterStats(transactions, 101),
+
       Stats.uniqueBusinessIdPerPostcodeNDayStats(transactions, 101),
       Stats.uniqueCustomersPerBusinessIdNDayStats(transactions, 101),
-      Stats.uniqueCustomerIdPerPostcodeNDayStats(transactions, 101)
+      Stats.uniqueCustomerIdPerPostcodeNDayStats(transactions, 101),
+
+      Stats.globalUniqueCustomersCounterStats(transactions, 101),
+      Stats.globalUniqueBusinessesCounterStats(transactions, 101),
+      Stats.globalUniquePostcodesCounterStats(transactions, 101)
     ).flatten, numSlices = 1)
 
     results.saveAsObjectFile(conf.outputPath())
