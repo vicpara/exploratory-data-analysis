@@ -10,7 +10,9 @@ libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "2.6" withSources() withJavadoc(),
   "org.joda" % "joda-convert" % "1.2" withSources() withJavadoc(),
   "org.apache.spark" % "spark-core_2.10" % "1.3.0-cdh5.4.4" withSources() withJavadoc(),
-  "com.github.scala-incubator.io" %% "scala-io-file" % "0.4.2" withSources() withJavadoc(),
+  "org.apache.commons" % "commons-csv" % "1.2" withSources() withJavadoc(),
+  "com.github.scala-incubator.io" %% "scala-io-core" % "0.4.3" withSources() withJavadoc(),
+  "com.github.scala-incubator.io" %% "scala-io-file" % "0.4.3" withSources() withJavadoc(),
   "com.rockymadden.stringmetric" %% "stringmetric-core" % "0.27.3" withSources() withJavadoc(),
   "org.scalaz" %% "scalaz-core" % "7.0.6" withSources() withJavadoc(),
   "org.rogach" %% "scallop" % "0.9.5" withSources() withJavadoc(),
@@ -21,22 +23,6 @@ libraryDependencies ++= Seq(
   "org.specs2" %% "specs2-scalacheck" % "2.4.9-scalaz-7.0.6" % "test" withSources() withJavadoc(),
   "io.spray" %% "spray-json" % "1.3.1" withSources() withJavadoc(),
   "org.scalaj" %% "scalaj-http" % "1.1.5" withSources() withJavadoc()
-)
-
-libraryDependencies ++= Seq(
-  "joda-time" % "joda-time" % "2.6" withSources() withJavadoc(),
-  "org.joda" % "joda-convert" % "1.2" withSources() withJavadoc(),
-  "org.apache.spark" % "spark-core_2.10" % "1.3.0-cdh5.4.4" withSources() withJavadoc(),
-  "com.rockymadden.stringmetric" %% "stringmetric-core" % "0.27.3" withSources() withJavadoc(),
-  "org.scalaz" %% "scalaz-core" % "7.0.6" withSources() withJavadoc(),
-  "org.rogach" %% "scallop" % "0.9.5" withSources() withJavadoc(),
-  "org.scala-lang" % "scalap" % "2.10.4" withSources() withJavadoc(),
-  "org.scala-lang" % "scala-compiler" % "2.10.4" withSources() withJavadoc(),
-  "org.specs2" %% "specs2-core" % "2.4.9-scalaz-7.0.6" % "test" withSources() withJavadoc(),
-  "org.apache.commons" % "commons-csv" % "1.2" withSources() withJavadoc(),
-  "com.github.scala-incubator.io" %% "scala-io-core" % "0.4.3" withSources() withJavadoc(),
-  "com.github.scala-incubator.io" %% "scala-io-file" % "0.4.3" withSources() withJavadoc(),
-  "org.specs2" %% "specs2-scalacheck" % "2.4.9-scalaz-7.0.6" % "test" withSources() withJavadoc()
 )
 
 resolvers ++= Seq(

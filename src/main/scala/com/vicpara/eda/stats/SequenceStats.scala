@@ -1,7 +1,7 @@
 package com.vicpara.eda.stats
 
-import org.apache.spark.SparkContext._
 import org.apache.spark.rdd.RDD
+
 import scala.reflect.ClassTag
 import scalaz.Scalaz._
 
