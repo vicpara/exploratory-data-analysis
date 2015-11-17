@@ -55,37 +55,37 @@ The results are saved into 2 possible formats:
  
 - pretty text format ready for inspection
 Example of the *pretty* output
-'''
+```
 BusinessId x Day - Distinct(CustomerId) 	DrillDownValue : Tuesday
 	[PercentileStats]: NumBinsInHistogram: 1188
-                  (9191,2015-10-27) |    0| #                                                                                                    | 44
-                  (6305,2015-11-10) |    1| ############################################                                                         | 51
-                  (6774,2015-11-03) |    2| #########################################################                                            | 53
-                  (4278,2015-11-03) |    3| ###############################################################                                      | 54
-                  (9191,2015-11-03) |    4| ###############################################################                                      | 54
-                  (4687,2015-11-17) |    5| #####################################################################                                | 55
-                   (380,2015-11-03) |    6| ############################################################################                         | 56
-                  (8114,2015-11-03) |    7| ##################################################################################                   | 57
-                  (5629,2015-10-27) |    8| ##################################################################################                   | 57
-                   (404,2015-11-03) |    9| ########################################################################################             | 58
-                  (7586,2015-11-10) |   10| ########################################################################################             | 58
-                  (3765,2015-11-10) |   11| ########################################################################################             | 58
-                  (8478,2015-11-17) |   12| ########################################################################################             | 58
-                  (3701,2015-10-27) |   13| #####################################################################################################| 60
-'''
+          (9191,2015-10-27) |    0| #######                                                | 44
+          (6305,2015-11-10) |    1| ######################                                 | 51
+          (6774,2015-11-03) |    2| ###########################                            | 53
+          (4278,2015-11-03) |    3| #################################                      | 54
+          (9191,2015-11-03) |    4| #################################                      | 54
+          (4687,2015-11-17) |    5| ###################################                    | 55
+          (380,2015-11-03)  |    6| ######################################                 | 56
+          (8114,2015-11-03) |    7| ############################################           | 57
+          (5629,2015-10-27) |    8| ############################################           | 57
+          (404,2015-11-03)  |    9| ###############################################        | 58
+          (7586,2015-11-10) |   10| ###############################################        | 58
+          (3765,2015-11-10) |   11| ###############################################        | 58
+          (8478,2015-11-17) |   12| ###############################################        | 58
+          (3701,2015-10-27) |   13| ###################################################### | 60
+```
 
 
 #### Example distinct statistic
 For a datum of type transaction 
-'''
+```
 case class Transaction(timestamp: Long, customerId: Long, businessId: Long, postcode: Option[String]) {
   def toSv(sep: String = "\t"): String = List(timestamp, customerId, businessId).mkString(sep)
 }
-'''
+```
 
 we define a distinct statistic over number of unique businesses (distinct businessId) inside a *postcode* for a given *day* for each unique values of the key *toDrillDownKeyOption*. The value of this field would normally be a categorical segmentation axis which is expected to have relatively small cardinality. Examples of fields that could be used for toDrillDownKeyOption would be country / city / type of product / region.
 
-'''
+```
   def uniqueBusinessIdPerPostcodeNDayStats(tx: RDD[Transaction], nPercentiles: Int = 1001) =
     Some("Postcode x Day - Distinct(BusinessId)")
     .map(n => PrettyPercentileStats(
@@ -98,10 +98,10 @@ we define a distinct statistic over number of unique businesses (distinct busine
         numPercentiles = nPercentiles
       )
     ))
-'''
+```
 
 #### Example Percentile statistic
-'''
+```
   def globalUniqueCustomersCounterStats(transactions: RDD[Transaction], nPercentiles: Int = 1001) =
     Some("Global distinct Customers")
     .map(n => PrettyPercentileStats(
@@ -113,4 +113,4 @@ we define a distinct statistic over number of unique businesses (distinct busine
         numPercentiles = nPercentiles
       )
     ))
-'''
+```
