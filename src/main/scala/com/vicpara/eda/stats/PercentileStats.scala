@@ -7,9 +7,17 @@ import math.{Pi => pi}
 
 import scalaz.Scalaz._
 
-case class PercentileStats(points: List[(String, Long)], numBuckets: Long)
+case class PercentileStats(points: List[(String, Long)], numBuckets: Long) {
+  def isSingleValue = points match {
+    case pts if pts.size == 1 => true
+    case _ => false
+  }
+}
 
-case class PercentileStatsWithFilterLevel(drillDownFilterValue: String, stats: PercentileStats)
+case class PercentileStatsWithFilterLevel(drillDownFilterValue: String, stats: PercentileStats) {
+  def isSingleStat = drillDownFilterValue.equals(SequenceStats.drillDownKeyAll)
+  def isSingleValue = stats.points.size == 1
+}
 
 case class PrettyPercentileStats(name: String, levels: List[PercentileStatsWithFilterLevel]) {
   def lineImage(xvals: Seq[Double], yvals: Seq[Double], name: String): Plot = {
@@ -29,11 +37,12 @@ case class PrettyPercentileStats(name: String, levels: List[PercentileStatsWithF
                         .data_source(source)
                         .glyph(line)
 
-    val plot = new Plot().title(name)
+    val plot = new Plot()
+               .title(name).title_text_font_size(FontSize.apply(10, FontUnits.PT))
                .x_range(xdr).y_range(ydr)
                .width(500).height(500)
                .border_fill(Color.White)
-               .background_fill("#e9e0db")
+               .background_fill("#FFE8C7")
 
     val xaxis = new LinearAxis().plot(plot)
     val yaxis = new LinearAxis().plot(plot)
