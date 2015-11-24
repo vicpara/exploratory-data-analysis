@@ -23,38 +23,39 @@ case class PrettyPercentileStats(name: String, levels: List[PercentileStatsWithF
     val xdr = new DataRange1d()
     val ydr = new DataRange1d()
 
-    val line = new Line().x(x).y(y).line_color(Color.BlueViolet)
+    val line = new Line().x(x).y(y).line_color("#666699").line_width(2)
 
-    val renderer = new GlyphRenderer()
-                   .data_source(source)
-                   .glyph(line)
+    val line_renderer = new GlyphRenderer()
+                        .data_source(source)
+                        .glyph(line)
 
-    val plot = new Plot().title(name).x_range(xdr).y_range(ydr)
+    val plot = new Plot().title(name)
+               .x_range(xdr).y_range(ydr)
+               .width(500).height(500)
+               .border_fill(Color.White)
+               .background_fill("#e9e0db")
 
     val xaxis = new LinearAxis().plot(plot)
     val yaxis = new LinearAxis().plot(plot)
     plot.below <<= (xaxis :: _)
     plot.left <<= (yaxis :: _)
+    val xgrid = new Grid().plot(plot).axis(xaxis).dimension(0)
+    val ygrid = new Grid().plot(plot).axis(yaxis).dimension(1)
 
     val pantool = new PanTool().plot(plot)
     val wheelzoomtool = new WheelZoomTool().plot(plot)
 
-    plot.renderers := List(xaxis, yaxis, renderer)
     plot.tools := List(pantool, wheelzoomtool)
+    plot.renderers := List(xaxis, yaxis, xgrid, ygrid, line_renderer)
 
     plot
-    //    val document = new Document(plot)
-    //    val fileOut = folder + "/" + name + ".line.html"
-    //    val html = document.save(fileOut)
-    //
-    //    AppLogger.infoLevel.info(s"Wrote ${html.file}. Open ${html.url} in a web browser.")
   }
 
-  def toChart: List[Plot] =
+  def toPlot: List[Plot] =
     levels.flatMap(stats => if (stats.stats.points.size > 1)
       Some(lineImage(xvals = stats.stats.points.indices.map(_.toDouble),
         yvals = stats.stats.points.map(_._2.toDouble),
-        name = name + stats.drillDownFilterValue))
+        name = name + " #" + stats.drillDownFilterValue))
     else None)
 
   def toHumanReadable: String = levels.map(l => s"\n${"_" * 148}\n$name \tDrillDownValue : ${l.drillDownFilterValue}\n\t" +

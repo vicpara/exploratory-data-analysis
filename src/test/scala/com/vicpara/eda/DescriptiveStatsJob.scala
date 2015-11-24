@@ -68,7 +68,7 @@ case object DescriptiveStatsJob extends Generators {
 
   def savePlotLists(results: RDD[PrettyPercentileStats], outFolder: String) = {
     val plotGrid: List[List[Plot]] = results.collect()
-                                     .flatMap(_.toChart)
+                                     .flatMap(_.toPlot)
                                      .zipWithIndex
                                      .groupBy(_._2 / 2)
                                      .map(_._2.map(_._1).toList).toList
