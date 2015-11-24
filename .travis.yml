@@ -1,10 +1,13 @@
 #test execution script.
 
 language: scala
+jdk:
+  - oraclejdk8
+
 sudo: false
 before_install: umask 0022
 scala:
-  - 2.10.5
+  - 2.10.4
   - 2.11.7
 script:
 - "echo no op"
@@ -13,4 +16,4 @@ script:
 branches:
   only:
     - master
-    - stable
+    - develop

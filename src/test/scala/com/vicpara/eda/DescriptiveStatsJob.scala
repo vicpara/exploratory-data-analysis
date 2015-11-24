@@ -1,9 +1,12 @@
 package com.vicpara.eda
 
 import com.vicpara.eda.stats.PrettyPercentileStats
+import io.continuum.bokeh.{Document, Plot, GridPlot}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 import org.rogach.scallop.ScallopConf
+
+import scala.collection.immutable.Iterable
 
 case class Transaction(timestamp: Long, customerId: Long, businessId: Long, postcode: Option[String]) {
   def toSv(sep: String = "\t"): String = List(timestamp, customerId, businessId).mkString(sep)
@@ -59,5 +62,21 @@ case object DescriptiveStatsJob extends Generators {
 
     results.saveAsObjectFile(conf.outputPath())
     conf.outputPathHuman.foreach(results.map(_.toHumanReadable).saveAsTextFile)
+
+    savePlotLists(results, "/tmp/eda/human/")
+  }
+
+  def savePlotLists(results: RDD[PrettyPercentileStats], outFolder: String) = {
+    val plotGrid: List[List[Plot]] = results.collect()
+                                     .flatMap(_.toPlot)
+                                     .zipWithIndex
+                                     .groupBy(_._2 / 2)
+                                     .map(_._2.map(_._1).toList).toList
+
+    val grid = new GridPlot().children(plotGrid)
+
+    val document = new Document(grid)
+    val html = document.save(outFolder + "/" + "EDA_Stats_Results.html")
+    AppLogger.infoLevel.info(s"Wrote EDA stats charts in ${html.file}. Open ${html.url} in a web browser.")
   }
 }

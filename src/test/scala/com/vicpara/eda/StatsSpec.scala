@@ -8,7 +8,7 @@ import org.specs2.mutable.Specification
 
 import scalaz.Scalaz._
 
-case object StatsSpec extends Specification with ScalaCheckMatchers with TestUtils{
+case object StatsSpec extends Specification with ScalaCheckMatchers with TestUtils {
   "ExploratoryDataAnalysis" should {
 
     "correctly compute percentiles statistics on monotonic increasing 21 sample dataset" in {
