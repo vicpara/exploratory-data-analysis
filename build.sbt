@@ -22,7 +22,8 @@ libraryDependencies ++= Seq(
   "org.specs2" %% "specs2-core" % "2.4.9-scalaz-7.0.6" % "test" withSources() withJavadoc(),
   "org.specs2" %% "specs2-scalacheck" % "2.4.9-scalaz-7.0.6" % "test" withSources() withJavadoc(),
   "io.spray" %% "spray-json" % "1.3.1" withSources() withJavadoc(),
-  "org.scalaj" %% "scalaj-http" % "1.1.5" withSources() withJavadoc()
+  "org.scalaj" %% "scalaj-http" % "1.1.5" withSources() withJavadoc(),
+  "io.continuum.bokeh" %% "bokeh" % "0.6" withSources() withJavadoc()
 )
 
 resolvers ++= Seq(
