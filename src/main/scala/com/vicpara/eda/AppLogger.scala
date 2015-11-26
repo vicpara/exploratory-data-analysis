@@ -1,6 +1,6 @@
 package com.vicpara.eda
 
-import org.apache.log4j.{Logger, PatternLayout, ConsoleAppender, Level}
+import org.apache.log4j.{ Logger, PatternLayout, ConsoleAppender, Level }
 import org.apache.spark.rdd.RDD
 
 case object AppLogger {

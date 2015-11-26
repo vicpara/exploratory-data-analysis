@@ -1,3 +1,5 @@
+import scalariform.formatter.preferences._
+
 organization := "com.github.vicpara"
 
 name := "exploratory-data-analysis"
@@ -92,4 +94,6 @@ pomExtra :=
       </developer>
     </developers>
 
+
 scalariformSettings
+
