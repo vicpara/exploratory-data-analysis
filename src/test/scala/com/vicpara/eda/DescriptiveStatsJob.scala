@@ -1,9 +1,9 @@
 package com.vicpara.eda
 
 import com.vicpara.eda.stats.PrettyPercentileStats
-import io.continuum.bokeh.{Document, Plot, GridPlot}
+import io.continuum.bokeh.{ Document, Plot, GridPlot }
 import org.apache.spark.rdd.RDD
-import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.{ SparkConf, SparkContext }
 import org.rogach.scallop.ScallopConf
 
 import scala.collection.immutable.Iterable
@@ -33,11 +33,11 @@ case object DescriptiveStatsJob extends Generators {
     AppLogger().info(conf.summary)
 
     val sparkConf = new SparkConf()
-                    .set("spark.akka.frameSize", "128")
-                    .setMaster("local")
-                    .set("spark.hadoop.validateOutputSpecs", "false")
-                    .set("spark.io.compression.codec", "lz4")
-                    .setAppName("Local Exploratory Data Analysis")
+      .set("spark.akka.frameSize", "128")
+      .setMaster("local")
+      .set("spark.hadoop.validateOutputSpecs", "false")
+      .set("spark.io.compression.codec", "lz4")
+      .setAppName("Local Exploratory Data Analysis")
 
     if (conf.tmpFolder.isDefined) sparkConf.set("spark.local.dir", conf.tmpFolder())
     @transient val sc: SparkContext = new SparkContext(sparkConf)
@@ -68,10 +68,10 @@ case object DescriptiveStatsJob extends Generators {
 
   def savePlotLists(results: RDD[PrettyPercentileStats], outFolder: String) = {
     val plotGrid: List[List[Plot]] = results.collect()
-                                     .flatMap(_.toPlot)
-                                     .zipWithIndex
-                                     .groupBy(_._2 / 2)
-                                     .map(_._2.map(_._1).toList).toList
+      .flatMap(_.toPlot)
+      .zipWithIndex
+      .groupBy(_._2 / 2)
+      .map(_._2.map(_._1).toList).toList
 
     val grid = new GridPlot().children(plotGrid)
 
