@@ -12,6 +12,10 @@ crossScalaVersions := Seq("2.11.7", "2.10.4")
 
 publishMavenStyle := true
 
+pomIncludeRepository := { _ => false }
+
+homepage := Some(url("https://github.com/vicpara/exploratory-data-analysis"))
+
 publishTo <<= version { (v: String) =>
   val nexus = "https://oss.sonatype.org/"
   if (v.trim.endsWith("-SNAPSHOT"))
