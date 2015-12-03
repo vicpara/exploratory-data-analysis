@@ -48,7 +48,7 @@ The results are saved into 2 possible formats:
 * pretty text format ready for inspection
 
 Example of the *pretty* output
-``
+```
 BusinessId x Day - Distinct(CustomerId) 	DrillDownValue : Tuesday
 	[PercentileStats]: NumBinsInHistogram: 1188
           (9191,2015-10-27) |    0| #######                                                | 44
@@ -66,7 +66,7 @@ BusinessId x Day - Distinct(CustomerId) 	DrillDownValue : Tuesday
           (8478,2015-11-17) |   12| ###############################################        | 58
           (3701,2015-10-27) |   13| ###################################################### | 60
           
-``
+```
 
 #### Example distinct statistic
 For a datum of type transaction 
