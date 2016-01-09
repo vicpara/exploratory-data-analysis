@@ -8,13 +8,15 @@ import scalaz.Scalaz._
 case object SequenceStats {
   val drillDownKeyAll = "$None$"
 
-  def percentile[T: ClassTag, DimKey: ClassTag, V: ClassTag](data: RDD[T],
+  def percentile[T: ClassTag, DimKey: ClassTag, V: ClassTag](
+    data: RDD[T],
     toDrillDownKeyOption: Option[T => String],
     toDimKey: T => DimKey,
     toVal: T => V,
     toStats: V => Long,
     reduceFunc: (V, V) => V,
-    numPercentiles: Int): List[PercentileStatsWithFilterLevel] =
+    numPercentiles: Int
+  ): List[PercentileStatsWithFilterLevel] =
 
     data.map(t => (toDrillDownKeyOption.getOrElse((_: T) => drillDownKeyAll)(t), toDimKey(t)) -> toVal(t))
       .reduceByKey(reduceFunc)
@@ -24,11 +26,13 @@ case object SequenceStats {
       percentileStats(numPercentiles) |>
       (percentileStats => percentileStats.toList.map((PercentileStatsWithFilterLevel.apply _).tupled))
 
-  def distinct[T: ClassTag, DimKey: ClassTag, V: ClassTag](data: RDD[T],
+  def distinct[T: ClassTag, DimKey: ClassTag, V: ClassTag](
+    data: RDD[T],
     toDrillDownKeyOption: Option[T => String],
     toDimKey: T => DimKey,
     toVal: T => V,
-    numPercentiles: Int): List[PercentileStatsWithFilterLevel] =
+    numPercentiles: Int
+  ): List[PercentileStatsWithFilterLevel] =
     data.map(t => (toDrillDownKeyOption.getOrElse((_: T) => drillDownKeyAll)(t), toDimKey(t), toVal(t)))
       .distinct()
       .map(e => (e._1, e._2) -> Set(e._3))

@@ -1,10 +1,10 @@
-import scalariform.formatter.preferences._
+import com.typesafe.sbt.SbtScalariform
 
 organization := "com.github.vicpara"
 
 name := "exploratory-data-analysis"
 
-version := "0.1.0-SNAPSHOT"
+releaseVersionFile := file("version.sbt")
 
 scalaVersion := "2.10.4"
 
@@ -48,37 +48,12 @@ libraryDependencies ++= Seq(
 
 resolvers ++= Seq(
   "mvnrepository" at "https://repository.cloudera.com/artifactory/cloudera-repos/",
-  "Maven Central" at "https://repo1.maven.org/maven2/"
+  "Maven Central" at "https://repo1.maven.org/maven2/",
+  "Sonatype OSS Releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
 )
 
-// Strat copied from defaultMergeStrategy with the "fail and confuse the hell out the user" lines changed to
-// "just bloody work and stop pissing everyone off"
-mergeStrategy in assembly <<= (mergeStrategy in assembly) ((old) => {
-  case x if Assembly.isConfigFile(x) =>
-    MergeStrategy.concat
-  case PathList(ps@_*) if Assembly.isReadme(ps.last) || Assembly.isLicenseFile(ps.last) =>
-    MergeStrategy.rename
-  case PathList("META-INF", xs@_*) =>
-    (xs map {
-      _.toLowerCase
-    }) match {
-      case ("manifest.mf" :: Nil) | ("index.list" :: Nil) | ("dependencies" :: Nil) =>
-        MergeStrategy.discard
-      case ps@(x :: xs) if ps.last.endsWith(".sf") || ps.last.endsWith(".dsa") =>
-        MergeStrategy.discard
-      case "plexus" :: xs =>
-        MergeStrategy.discard
-      case "services" :: xs =>
-        MergeStrategy.filterDistinctLines
-      case ("spring.schemas" :: Nil) | ("spring.handlers" :: Nil) =>
-        MergeStrategy.filterDistinctLines
-      case _ => MergeStrategy.first // Changed deduplicate to first
-    }
-  case PathList(_*) => MergeStrategy.first // added this line
-})
-
 pomExtra :=
-  <url>http://github.com/tototoshi/scala-csv</url>
+  <url>http://github.com/vicpara/exploratory-data-analysis/</url>
     <licenses>
       <license>
         <name>Apache License, Version 2.0</name>
@@ -97,7 +72,6 @@ pomExtra :=
         <url>http://github.com/vicpara</url>
       </developer>
     </developers>
-
 
 scalariformSettings
 
