@@ -1,7 +1,7 @@
 package com.vicpara.eda
 
-import org.joda.time.{DateTime, DateTimeZone, Interval, LocalDateTime}
-import org.scalacheck.{Prop, Arbitrary, Gen}
+import org.joda.time.{ DateTime, DateTimeZone, Interval, LocalDateTime }
+import org.scalacheck.{ Prop, Arbitrary, Gen }
 
 import scala.collection.immutable
 import scalaz.Scalaz._
@@ -21,7 +21,7 @@ trait Generators {
   val dates = DateTime.now() |> (t0 => (0 until noOfDays).map(t0.minusDays))
 
   val availablePostcodes = Gen.listOfN(100, Gen.listOfN(6, Gen.alphaNumChar).flatMap(_.mkString("").toUpperCase()))
-                           .sample.get
+    .sample.get
 
   val businesses: List[Int] = Gen.listOfN(nBusinesses, Gen.choose(0, 10000)).sample.get
   val customers: List[Int] = Gen.listOfN(nCustomers, Gen.chooseNum(10001, 20000)).sample.get

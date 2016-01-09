@@ -1,10 +1,30 @@
-organization := "com.vicpara"
+import scalariform.formatter.preferences._
+
+organization := "com.github.vicpara"
 
 name := "exploratory-data-analysis"
 
 version := "0.1.0-SNAPSHOT"
 
 scalaVersion := "2.10.4"
+
+crossScalaVersions := Seq("2.11.7", "2.10.4")
+
+publishMavenStyle := true
+
+pomIncludeRepository := { _ => false }
+
+homepage := Some(url("https://github.com/vicpara/exploratory-data-analysis"))
+
+publishTo <<= version { (v: String) =>
+  val nexus = "https://oss.sonatype.org/"
+  if (v.trim.endsWith("-SNAPSHOT"))
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  else
+    Some("releases" at nexus + "service/local/staging/deploy/maven2")
+}
+
+publishArtifact in Test := false
 
 libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "2.6" withSources() withJavadoc(),
@@ -56,3 +76,28 @@ mergeStrategy in assembly <<= (mergeStrategy in assembly) ((old) => {
     }
   case PathList(_*) => MergeStrategy.first // added this line
 })
+
+pomExtra :=
+  <url>http://github.com/tototoshi/scala-csv</url>
+    <licenses>
+      <license>
+        <name>Apache License, Version 2.0</name>
+        <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+        <distribution>repo</distribution>
+      </license>
+    </licenses>
+    <scm>
+      <url>git@github.com:vicpara/exploratory-data-analysis.git</url>
+      <connection>scm:git:git@github.com:vicpara/exploratory-data-analysis.git</connection>
+    </scm>
+    <developers>
+      <developer>
+        <id>vicpara</id>
+        <name>Victor Paraschiv</name>
+        <url>http://github.com/vicpara</url>
+      </developer>
+    </developers>
+
+
+scalariformSettings
+
