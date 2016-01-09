@@ -1,6 +1,6 @@
 package com.vicpara.eda
 
-import com.vicpara.eda.stats.{SequenceStats, PercentileStats, PercentileStatsWithFilterLevel, PrettyPercentileStats}
+import com.vicpara.eda.stats.{ SequenceStats, PercentileStats, PercentileStatsWithFilterLevel, PrettyPercentileStats }
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.specs2.matcher.ScalaCheckMatchers
@@ -14,10 +14,10 @@ case object StatsSpec extends Specification with ScalaCheckMatchers with TestUti
     "correctly compute percentiles statistics on monotonic increasing 21 sample dataset" in {
       val rawData =
         (0l until 21).map((" ", _))
-        .map {
-          case (drillDownKey, dimKey) => (((drillDownKey, dimKey), dimKey), dimKey)
-        }
-        .toList
+          .map {
+            case (drillDownKey, dimKey) => (((drillDownKey, dimKey), dimKey), dimKey)
+          }
+          .toList
       val dataRDD: RDD[(((String, Long), Long), Long)] = sc.parallelize(rawData)
 
       val res: PercentileStats = SequenceStats.percentileStats[Long](numPercentiles = 21)(dataRDD).head._2
@@ -32,8 +32,8 @@ case object StatsSpec extends Specification with ScalaCheckMatchers with TestUti
       val intRes = SequenceStats.percentileStats[Long](numPercentiles = 11)(dataRDD)
       val res =
         List(1, 2, 3, 5, 6, 7, 9, 11, 20, 21, 99, 100)
-        .map(r => (r, SequenceStats.percentileStats[Long](numPercentiles = r)(dataRDD).get(key).get.points.size))
-        .filter(e => e._1 != e._2)
+          .map(r => (r, SequenceStats.percentileStats[Long](numPercentiles = r)(dataRDD).get(key).get.points.size))
+          .filter(e => e._1 != e._2)
 
       res.foreach(el => el._1 must_=== el._2)
       res.size must_=== 0
@@ -44,8 +44,8 @@ case object StatsSpec extends Specification with ScalaCheckMatchers with TestUti
       val res = numSamplesList.flatMap(numSample => {
         val ires =
           List(102, 103, 104, 101, 130, 200, 300, 500, 1000)
-          .map(v => (numSample, SequenceStats.percentileIndices(numSample, v).size))
-          .filter(v => v._1 != v._2)
+            .map(v => (numSample, SequenceStats.percentileIndices(numSample, v).size))
+            .filter(v => v._1 != v._2)
 
         ires.forall(el => el._1 must_=== el._2)
         ires.size must_=== 0
@@ -78,8 +78,8 @@ case object StatsSpec extends Specification with ScalaCheckMatchers with TestUti
     "correctly computes the number of Percentile Indices for increasing number of percentiles" in {
       val res =
         List(1, 2, 3, 5, 6, 7, 9, 11, 17, 20, 21, 40, 50, 51, 99, 100, 101)
-        .map(v => (v, SequenceStats.percentileIndices(101, v).size))
-        .filter(v => v._1 != v._2)
+          .map(v => (v, SequenceStats.percentileIndices(101, v).size))
+          .filter(v => v._1 != v._2)
 
       res.foreach(el => el._1 must_=== el._2)
       res.size must_=== 0
@@ -107,39 +107,65 @@ case object StatsSpec extends Specification with ScalaCheckMatchers with TestUti
     }
 
     "correctly pretty prints humanReadable" in {
-      val setEmpty = PrettyPercentileStats(name = "xxx",
-        levels = List(PercentileStatsWithFilterLevel("NONE",
-          stats = PercentileStats(points = Nil, numBuckets = 0))))
+      val setEmpty = PrettyPercentileStats(
+        name = "xxx",
+        levels = List(PercentileStatsWithFilterLevel(
+          "NONE",
+          stats = PercentileStats(points = Nil, numBuckets = 0)
+        ))
+      )
 
-      val set1 = PrettyPercentileStats(name = "xxx",
-        levels = List(PercentileStatsWithFilterLevel("NONE",
-          stats = PercentileStats(points = List(("Key1", 2l)), numBuckets = 1))))
+      val set1 = PrettyPercentileStats(
+        name = "xxx",
+        levels = List(PercentileStatsWithFilterLevel(
+          "NONE",
+          stats = PercentileStats(points = List(("Key1", 2l)), numBuckets = 1)
+        ))
+      )
 
-      val set2 = PrettyPercentileStats(name = "xxx",
-        levels = List(PercentileStatsWithFilterLevel("NONE",
-          stats = PercentileStats(points = List(("Key1", 1l), ("Key2", 2l)), numBuckets = 2))))
+      val set2 = PrettyPercentileStats(
+        name = "xxx",
+        levels = List(PercentileStatsWithFilterLevel(
+          "NONE",
+          stats = PercentileStats(points = List(("Key1", 1l), ("Key2", 2l)), numBuckets = 2)
+        ))
+      )
 
-      val set3 = PrettyPercentileStats(name = "xxx",
-        levels = List(PercentileStatsWithFilterLevel("NONE",
-          stats = PercentileStats(points = List(("Key1", 1l), ("Key2", 2l), ("Key3", 3l)), numBuckets = 3))))
+      val set3 = PrettyPercentileStats(
+        name = "xxx",
+        levels = List(PercentileStatsWithFilterLevel(
+          "NONE",
+          stats = PercentileStats(points = List(("Key1", 1l), ("Key2", 2l), ("Key3", 3l)), numBuckets = 3)
+        ))
+      )
 
       List(setEmpty, set1, set2, set3)
-      .map(e => e.levels.head.stats.points.size -> e.toHumanReadable)
-      .map(e => e._1 -> (e._1 == e._2.split("\n").size + 2))
-      .count(_._2) must_=== 0
+        .map(e => e.levels.head.stats.points.size -> e.toHumanReadable)
+        .map(e => e._1 -> (e._1 == e._2.split("\n").size + 2))
+        .count(_._2) must_=== 0
     }
 
     "correctly pretty prints for humans bad samples" in {
       val data = List(
-        PrettyPercentileStats(name = "BusinessId x Day - Count(Tx)",
-          levels = List(PercentileStatsWithFilterLevel(drillDownFilterValue = "DrillDownKey.ALL",
-            stats = PercentileStats(points = List(("1", 1830683l)), numBuckets = 1l)))),
+        PrettyPercentileStats(
+          name = "BusinessId x Day - Count(Tx)",
+          levels = List(PercentileStatsWithFilterLevel(
+            drillDownFilterValue = "DrillDownKey.ALL",
+            stats = PercentileStats(points = List(("1", 1830683l)), numBuckets = 1l)
+          ))
+        ),
 
-        PrettyPercentileStats(name = "Postcode x Day - Count(RichTx)",
-          levels = List(PercentileStatsWithFilterLevel(drillDownFilterValue = "DrillDownKey.ALL",
-            PercentileStats(points = List((("YO126EE", "2014-12-02").toString(), 1l),
+        PrettyPercentileStats(
+          name = "Postcode x Day - Count(RichTx)",
+          levels = List(PercentileStatsWithFilterLevel(
+            drillDownFilterValue = "DrillDownKey.ALL",
+            PercentileStats(points = List(
+              (("YO126EE", "2014-12-02").toString(), 1l),
               (("CH441BA", "2014-09-23").toString(), 1l), (("LS287BJ", "2014-10-24").toString(), 1l),
-              (("G156RX", "2014-01-08").toString(), 1l)), numBuckets = 4))))
+              (("G156RX", "2014-01-08").toString(), 1l)
+            ), numBuckets = 4)
+          ))
+        )
       )
 
       val hr = data.map(_.toHumanReadable)
@@ -153,13 +179,15 @@ case object StatsSpec extends Specification with ScalaCheckMatchers with TestUti
 
       @transient implicit lazy val isc: SparkContext = sc
 
-      val res = SequenceStats.percentile[DataP, String, Long](data = dataRDD,
+      val res = SequenceStats.percentile[DataP, String, Long](
+        data = dataRDD,
         toDrillDownKeyOption = None,
         toDimKey = _.k,
         toVal = _ => 1l,
         toStats = identity,
         reduceFunc = _ |+| _,
-        numPercentiles = 10)
+        numPercentiles = 10
+      )
 
       println(PrettyPercentileStats(name = "Constant Dataset", levels = res).toHumanReadable)
 
@@ -173,18 +201,22 @@ case object StatsSpec extends Specification with ScalaCheckMatchers with TestUti
 
       @transient implicit lazy val isc: SparkContext = sc
 
-      val res = SequenceStats.percentile[DataP, String, Long](data = dataRDD,
+      val res = SequenceStats.percentile[DataP, String, Long](
+        data = dataRDD,
         toDrillDownKeyOption = None,
         toDimKey = _.k,
         toVal = _ => 1l,
         toStats = identity,
         reduceFunc = _ + _,
-        numPercentiles = 10)
+        numPercentiles = 10
+      )
 
       println(PrettyPercentileStats(name = "", levels = res).toHumanReadable)
 
-      val expected = PercentileStats(points = (1 until 11).toList.map(e => (e.toString, e.toLong)),
-        numBuckets = 10l)
+      val expected = PercentileStats(
+        points = (1 until 11).toList.map(e => (e.toString, e.toLong)),
+        numBuckets = 10l
+      )
 
       res.head.stats must_=== expected
       res.head.stats.points.map(_._2) must_=== expected.points.map(_._2)

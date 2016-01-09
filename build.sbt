@@ -1,6 +1,10 @@
+import com.typesafe.sbt.SbtScalariform
+
 organization := "com.vicpara"
 
 name := "exploratory-data-analysis"
+
+releaseVersionFile := file("version.sbt")
 
 version := "0.1.0-SNAPSHOT"
 
@@ -13,7 +17,6 @@ libraryDependencies ++= Seq(
   "org.apache.commons" % "commons-csv" % "1.2" withSources() withJavadoc(),
   "com.github.scala-incubator.io" %% "scala-io-core" % "0.4.3" withSources() withJavadoc(),
   "com.github.scala-incubator.io" %% "scala-io-file" % "0.4.3" withSources() withJavadoc(),
-  "com.rockymadden.stringmetric" %% "stringmetric-core" % "0.27.3" withSources() withJavadoc(),
   "org.scalaz" %% "scalaz-core" % "7.0.6" withSources() withJavadoc(),
   "org.rogach" %% "scallop" % "0.9.5" withSources() withJavadoc(),
   "org.scala-lang" % "scalap" % "2.10.4" withSources() withJavadoc(),
@@ -23,7 +26,8 @@ libraryDependencies ++= Seq(
   "org.specs2" %% "specs2-scalacheck" % "2.4.9-scalaz-7.0.6" % "test" withSources() withJavadoc(),
   "io.spray" %% "spray-json" % "1.3.1" withSources() withJavadoc(),
   "org.scalaj" %% "scalaj-http" % "1.1.5" withSources() withJavadoc(),
-  "io.continuum.bokeh" %% "bokeh" % "0.6" withSources() withJavadoc()
+  "io.continuum.bokeh" %% "bokeh" % "0.6" withSources() withJavadoc(),
+  "org.scalariform" %% "scalariform" % "0.1.8" withSources() withJavadoc()
 )
 
 resolvers ++= Seq(
@@ -31,8 +35,7 @@ resolvers ++= Seq(
   "Maven Central" at "https://repo1.maven.org/maven2/"
 )
 
-// Strat copied from defaultMergeStrategy with the "fail and confuse the hell out the user" lines changed to
-// "just bloody work and stop pissing everyone off"
+
 mergeStrategy in assembly <<= (mergeStrategy in assembly) ((old) => {
   case x if Assembly.isConfigFile(x) =>
     MergeStrategy.concat
@@ -56,3 +59,28 @@ mergeStrategy in assembly <<= (mergeStrategy in assembly) ((old) => {
     }
   case PathList(_*) => MergeStrategy.first // added this line
 })
+
+pomExtra :=
+  <url>http://github.com/tototoshi/scala-csv</url>
+    <licenses>
+      <license>
+        <name>Apache License, Version 2.0</name>
+        <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+        <distribution>repo</distribution>
+      </license>
+    </licenses>
+    <scm>
+      <url>git@github.com:vicpara/exploratory-data-analysis.git</url>
+      <connection>scm:git:git@github.com:vicpara/exploratory-data-analysis.git</connection>
+    </scm>
+    <developers>
+      <developer>
+        <id>vicpara</id>
+        <name>Victor Paraschiv</name>
+        <url>http://github.com/vicpara</url>
+      </developer>
+    </developers>
+
+
+scalariformSettings
+

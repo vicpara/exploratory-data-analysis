@@ -1,9 +1,7 @@
 package com.vicpara.eda.stats
 
-import breeze.numerics.sin
 import com.vicpara.eda.AppLogger
 import io.continuum.bokeh._
-import math.{Pi => pi}
 
 import scalaz.Scalaz._
 
@@ -26,7 +24,7 @@ case class PrettyPercentileStats(name: String, levels: List[PercentileStatsWithF
       val y = column(yvals)
     }
 
-    import source.{x, y}
+    import source.{ x, y }
 
     val xdr = new DataRange1d()
     val ydr = new DataRange1d()
@@ -34,15 +32,15 @@ case class PrettyPercentileStats(name: String, levels: List[PercentileStatsWithF
     val line = new Line().x(x).y(y).line_color("#666699").line_width(2)
 
     val line_renderer = new GlyphRenderer()
-                        .data_source(source)
-                        .glyph(line)
+      .data_source(source)
+      .glyph(line)
 
     val plot = new Plot()
-               .title(name).title_text_font_size(FontSize.apply(10, FontUnits.PT))
-               .x_range(xdr).y_range(ydr)
-               .width(500).height(500)
-               .border_fill(Color.White)
-               .background_fill("#FFE8C7")
+      .title(name).title_text_font_size(FontSize.apply(10, FontUnits.PT))
+      .x_range(xdr).y_range(ydr)
+      .width(500).height(500)
+      .border_fill(Color.White)
+      .background_fill("#FFE8C7")
 
     val xaxis = new LinearAxis().plot(plot)
     val yaxis = new LinearAxis().plot(plot)
@@ -62,9 +60,11 @@ case class PrettyPercentileStats(name: String, levels: List[PercentileStatsWithF
 
   def toPlot: List[Plot] =
     levels.flatMap(stats => if (stats.stats.points.size > 1)
-      Some(lineImage(xvals = stats.stats.points.indices.map(_.toDouble),
-        yvals = stats.stats.points.map(_._2.toDouble),
-        name = name + " #" + stats.drillDownFilterValue))
+      Some(lineImage(
+      xvals = stats.stats.points.indices.map(_.toDouble),
+      yvals = stats.stats.points.map(_._2.toDouble),
+      name = name + " #" + stats.drillDownFilterValue
+    ))
     else None)
 
   def toHumanReadable: String = levels.map(l => s"\n${"_" * 148}\n$name \tDrillDownValue : ${l.drillDownFilterValue}\n\t" +
@@ -80,15 +80,19 @@ case class PrettyPercentileStats(name: String, levels: List[PercentileStatsWithF
       val pointsPerChar: Double = (max - min) / 100.0
       val fillChar = "#"
 
+      val maxLabelLength = math.min(100, stats.points.map(_._1.length).max) + 5
+
       val histPretty: String =
-        stats.points.zipWithIndex.map {
-          case ((key, value), index) =>
-            val strIndex = "%5s".format(index)
-            val label = "%35s".format(key)
-            val bars = "%101s".format(fillChar * (1 + ((value - min) / pointsPerChar).toInt)).reverse
-            s"$label |$strIndex| $bars| $value"
-        }
-        .mkString("\n")
+        stats.points
+          .zipWithIndex.map {
+            case ((key, value), index) =>
+              val strIndex = "%5s".format(index)
+              val label = s"%${maxLabelLength}s".format(key)
+              val bars = "%101s".format(fillChar * (1 + ((value - min) / pointsPerChar).toInt)).reverse
+              s"$label |$strIndex| $bars| $value"
+          }
+          .mkString("\n")
+
       s"[PercentileStats]: NumBinsInHistogram: ${stats.numBuckets.toString}\n$histPretty"
   }
 }
