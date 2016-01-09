@@ -1,5 +1,7 @@
 import com.typesafe.sbt.SbtScalariform
 
+sonatypeProfileName := "com.github.vicpara"
+
 organization := "com.github.vicpara"
 
 name := "exploratory-data-analysis"
