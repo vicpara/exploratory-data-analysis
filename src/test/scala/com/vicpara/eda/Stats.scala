@@ -9,8 +9,7 @@ case object Stats {
     Some("Customer x Day - Count(Tx)")
       .map(n => PrettyPercentileStats(
         name = n,
-        levels = SequenceStats.percentile[Transaction, (Long, String), Long](
-          data = AppLogger.logStage(transactions, n),
+        levels = SequenceStats.percentile[Transaction, (Long, String), Long](data = AppLogger.logStage(transactions, n),
           toDrillDownKeyOption = None,
           toDimKey = tx => (tx.customerId, dayAsString(tx.timestamp)),
           toVal = _ => 1l,
@@ -24,23 +23,20 @@ case object Stats {
     Some("BusinessId x Day - Count(Tx)")
       .map(n => PrettyPercentileStats(
         name = n,
-        levels = SequenceStats.percentile[Transaction, (Long, String), Long](
-          data = AppLogger.logStage(transactions, n),
+        levels = SequenceStats.percentile[Transaction, (Long, String), Long](data = AppLogger.logStage(transactions, n),
           toDrillDownKeyOption = None,
           toDimKey = tx => (tx.businessId, dayAsString(tx.timestamp)),
           toVal = r => 1l,
           toStats = identity,
           reduceFunc = _ + _,
-          numPercentiles = nPercentiles
-        )
+          numPercentiles = nPercentiles)
       ))
 
   def globalUniqueBusinessesCounterStats(transactions: RDD[Transaction], nPercentiles: Int = 1001) =
     Some("Global distinct Businesses")
       .map(n => PrettyPercentileStats(
         name = n,
-        levels = SequenceStats.distinct[Transaction, Long, Long](
-          data = AppLogger.logStage(transactions, n),
+        levels = SequenceStats.distinct[Transaction, Long, Long](data = AppLogger.logStage(transactions, n),
           toDrillDownKeyOption = None,
           toDimKey = t => 1l,
           toVal = tx => tx.businessId,
@@ -52,8 +48,7 @@ case object Stats {
     Some("Global distinct Postcodes")
       .map(n => PrettyPercentileStats(
         name = n,
-        levels = SequenceStats.distinct[Transaction, Long, String](
-          data = AppLogger.logStage(transactions, n),
+        levels = SequenceStats.distinct[Transaction, Long, String](data = AppLogger.logStage(transactions, n),
           toDrillDownKeyOption = None,
           toDimKey = t => 1l,
           toVal = tx => tx.postcode.get,
@@ -65,8 +60,7 @@ case object Stats {
     Some("Global distinct Customers")
       .map(n => PrettyPercentileStats(
         name = n,
-        levels = SequenceStats.distinct[Transaction, Long, Long](
-          data = AppLogger.logStage(transactions, n),
+        levels = SequenceStats.distinct[Transaction, Long, Long](data = AppLogger.logStage(transactions, n),
           toDrillDownKeyOption = None,
           toDimKey = t => 1l,
           toVal = tx => tx.customerId,
