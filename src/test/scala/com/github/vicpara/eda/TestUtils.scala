@@ -1,4 +1,4 @@
-package com.vicpara.eda
+package com.github.vicpara.eda
 
 import org.apache.spark.{ SparkConf, SparkContext }
 
