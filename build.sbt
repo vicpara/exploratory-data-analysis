@@ -14,9 +14,7 @@ crossScalaVersions := Seq("2.11.7", "2.10.4")
 
 publishMavenStyle := true
 
-pomIncludeRepository := { _ => false }
-
-homepage := Some(url("https://github.com/vicpara/exploratory-data-analysis"))
+homepage := Some(url("http://github.com/vicpara/exploratory-data-analysis"))
 
 publishTo <<= version { (v: String) =>
   val nexus = "https://oss.sonatype.org/"
@@ -54,8 +52,10 @@ resolvers ++= Seq(
   "Sonatype OSS Releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
 )
 
-pomExtra :=
-  <url>http://github.com/vicpara/exploratory-data-analysis/</url>
+pomIncludeRepository := { _ => false }
+
+pomExtra :=(
+  <url>http://github.com/vicpara/exploratory-data-analysis</url>
     <licenses>
       <license>
         <name>Apache License, Version 2.0</name>
@@ -73,7 +73,7 @@ pomExtra :=
         <name>Victor Paraschiv</name>
         <url>http://github.com/vicpara</url>
       </developer>
-    </developers>
+    </developers>)
 
 scalariformSettings
 
