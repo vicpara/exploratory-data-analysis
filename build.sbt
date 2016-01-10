@@ -67,7 +67,6 @@ assemblyMergeStrategy in assembly := {
     case _ => MergeStrategy.first // Changed deduplicate to first
   }
   case PathList(_*) => MergeStrategy.first // added this line
-
 }
 
 pomIncludeRepository := { _ => false }
