@@ -1,6 +1,18 @@
 # Exploratory-Data-Analysis - EDA  [![Build Status](https://travis-ci.org/vicpara/exploratory-data-analysis.svg?branch=master)](https://travis-ci.org/vicpara/exploratory-data-analysis)
 Spark library for doing exploratory data analysis on your data set in a scalable way.
 
+
+## Getting Exploratory Data Analysis
+
+If you're using SBT, add the following line to your build file:
+
+```scala
+libraryDependencies += "com.github.vicpara" % "exploratory-data-analysis_2.10" % "1.0.0"
+```
+
+For Maven and other build tools, you can visit [search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Cexploratory%20data%20analysis).
+To get sample configurations, click on the version of the module you are interested in.
+
 -----
 ### The problem
 
@@ -69,6 +81,9 @@ BusinessId x Day - Distinct(CustomerId) 	DrillDownValue : Tuesday
 ```
 
 #### Example distinct statistic
+
+You can find a working example for the capabilities of EDA in *test* folder.
+
 For a datum of type transaction 
 ```scala
 
