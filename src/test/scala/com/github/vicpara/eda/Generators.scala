@@ -1,4 +1,4 @@
-package com.vicpara.eda
+package com.github.vicpara.eda
 
 import org.joda.time.{ DateTime, DateTimeZone, Interval, LocalDateTime }
 import org.scalacheck.{ Prop, Arbitrary, Gen }

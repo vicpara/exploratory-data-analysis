@@ -18,6 +18,6 @@ addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.7.5")
 
 addSbtPlugin("com.github.tkawachi" % "sbt-doctest" % "0.3.2")
 
-addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "1.0")
+addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "1.1")
 
 fullResolvers ~= {_.filterNot(_.name == "jcenter")}

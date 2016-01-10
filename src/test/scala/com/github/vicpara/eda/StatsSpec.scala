@@ -1,6 +1,6 @@
-package com.vicpara.eda
+package com.github.vicpara.eda
 
-import com.vicpara.eda.stats.{ SequenceStats, PercentileStats, PercentileStatsWithFilterLevel, PrettyPercentileStats }
+import com.github.vicpara.eda.stats.{ SequenceStats, PercentileStats, PercentileStatsWithFilterLevel, PrettyPercentileStats }
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.specs2.matcher.ScalaCheckMatchers

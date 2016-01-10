@@ -1,4 +1,4 @@
-package com.vicpara.eda.stats
+package com.github.vicpara.eda.stats
 
 import org.apache.spark.rdd.RDD
 

@@ -1,6 +1,5 @@
-package com.vicpara.eda.stats
+package com.github.vicpara.eda.stats
 
-import com.vicpara.eda.AppLogger
 import io.continuum.bokeh._
 
 import scalaz.Scalaz._

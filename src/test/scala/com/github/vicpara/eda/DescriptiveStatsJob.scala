@@ -1,12 +1,10 @@
-package com.vicpara.eda
+package com.github.vicpara.eda
 
-import com.vicpara.eda.stats.PrettyPercentileStats
+import com.github.vicpara.eda.stats.PrettyPercentileStats
 import io.continuum.bokeh.{ Document, Plot, GridPlot }
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{ SparkConf, SparkContext }
 import org.rogach.scallop.ScallopConf
-
-import scala.collection.immutable.Iterable
 
 case class Transaction(timestamp: Long, customerId: Long, businessId: Long, postcode: Option[String]) {
   def toSv(sep: String = "\t"): String = List(timestamp, customerId, businessId).mkString(sep)
@@ -41,8 +39,6 @@ case object DescriptiveStatsJob extends Generators {
 
     if (conf.tmpFolder.isDefined) sparkConf.set("spark.local.dir", conf.tmpFolder())
     @transient val sc: SparkContext = new SparkContext(sparkConf)
-
-    //    @transient val sc = StaticSparkContext.staticSc
 
     val transactions = sc.parallelize(randomTransactions(80000).sample.get)
     AppLogger.logStage(transactions, "Finished generating the data points")

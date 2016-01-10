@@ -1,6 +1,6 @@
-package com.vicpara.eda
+package com.github.vicpara.eda
 
-import com.vicpara.eda.stats.{ SequenceStats, PrettyPercentileStats }
+import com.github.vicpara.eda.stats.{ SequenceStats, PrettyPercentileStats }
 import org.apache.spark.rdd.RDD
 import org.joda.time.DateTime
 
