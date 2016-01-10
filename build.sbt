@@ -14,8 +14,6 @@ crossScalaVersions := Seq("2.11.7", "2.10.4")
 
 publishMavenStyle := true
 
-homepage := Some(url("http://github.com/vicpara/exploratory-data-analysis"))
-
 publishTo <<= version { (v: String) =>
   val nexus = "https://oss.sonatype.org/"
   if (v.trim.endsWith("-SNAPSHOT"))
@@ -52,9 +50,29 @@ resolvers ++= Seq(
   "Sonatype OSS Releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
 )
 
+assemblyMergeStrategy in assembly := {
+  case el if el.contains("fasterxml.jackson.core") => MergeStrategy.first
+  case el if el.contains("guava") => MergeStrategy.first
+
+  case x if Assembly.isConfigFile(x) => MergeStrategy.concat
+  case PathList(ps@_*) if Assembly.isReadme(ps.last) || Assembly.isLicenseFile(ps.last) => MergeStrategy.rename
+  case PathList("META-INF", xs@_*) => (xs map {
+    _.toLowerCase
+  }) match {
+    case ("manifest.mf" :: Nil) | ("index.list" :: Nil) | ("dependencies" :: Nil) => MergeStrategy.discard
+    case ps@(x :: xs) if ps.last.endsWith(".sf") || ps.last.endsWith(".dsa") => MergeStrategy.discard
+    case "plexus" :: xs => MergeStrategy.discard
+    case "services" :: xs => MergeStrategy.filterDistinctLines
+    case ("spring.schemas" :: Nil) | ("spring.handlers" :: Nil) => MergeStrategy.filterDistinctLines
+    case _ => MergeStrategy.first // Changed deduplicate to first
+  }
+  case PathList(_*) => MergeStrategy.first // added this line
+
+}
+
 pomIncludeRepository := { _ => false }
 
-pomExtra :=(
+pomExtra := (
   <url>http://github.com/vicpara/exploratory-data-analysis</url>
     <licenses>
       <license>
