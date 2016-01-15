@@ -58,8 +58,10 @@ The results are saved into 2 possible formats:
 
 * object file
 * pretty text format ready for inspection
+* html files
 
-Example of the *pretty* output
+We use the *pretty* format when examining the results in bash on remote servers or HDFS. *Pretty* looks like this:
+
 ```
 BusinessId x Day - Distinct(CustomerId) 	DrillDownValue : Tuesday
 	[PercentileStats]: NumBinsInHistogram: 1188
@@ -79,6 +81,9 @@ BusinessId x Day - Distinct(CustomerId) 	DrillDownValue : Tuesday
           (3701,2015-10-27) |   13| ###################################################### | 60
           
 ```
+
+Using `scala-bokeh`, the library can also output the results of the EDA in html files for easier examination.
+![Histogram chart example](https://github.com/vicpara/exploratory-data-analysis/blob/master/Histogram.png)
 
 #### Example distinct statistic
 
