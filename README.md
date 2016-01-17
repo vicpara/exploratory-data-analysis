@@ -1,4 +1,5 @@
-# Exploratory-Data-Analysis - EDA  [![Build Status](https://travis-ci.org/vicpara/exploratory-data-analysis.svg?branch=master)](https://travis-ci.org/vicpara/exploratory-data-analysis) [![Licence](https://img.shields.io/badge/licence-MIT-blue.svg)](https://tldrlegal.com/license/mit-license)
+# Exploratory-Data-Analysis - EDA  
+[![Build Status](https://travis-ci.org/vicpara/exploratory-data-analysis.svg?branch=master)](https://travis-ci.org/vicpara/exploratory-data-analysis) [![Licence](https://img.shields.io/badge/licence-MIT-blue.svg)](https://tldrlegal.com/license/mit-license)
 Spark library for doing exploratory data analysis on your data set in a scalable way.
 
 
